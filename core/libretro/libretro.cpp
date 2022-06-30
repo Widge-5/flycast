@@ -2668,8 +2668,8 @@ static void UpdateInputStateNaomi(u32 port)
 		 {
 			int x = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X);
 			int y = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y);
-			mo_x_abs[port] = (x + 0x8000) * 640.f / 0x10000;
-			mo_y_abs[port] = (y + 0x8000) * 480.f / 0x10000;
+			mo_x_abs[port] = (x + 0x8000) * 640.f / 0x10000 - 58.514.f;
+			mo_y_abs[port] = (y + 0x8000) * 480.f / 0x10000 + 28.343.f;
 
 			lightgun_params[port].offscreen = false;
 			lightgun_params[port].x = mo_x_abs[port];
@@ -3108,8 +3108,8 @@ void UpdateInputState(u32 port)
 		 }
 		 else
 		 {
-			mo_x_abs[port] = (input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X) + 0x8000) * 640.f / 0x10000;
-			mo_y_abs[port] = (input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y) + 0x8000) * 480.f / 0x10000;
+			mo_x_abs[port] = (input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X) + 0x8000) * 640.f / 0x10000 - 58.514.f;
+			mo_y_abs[port] = (input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y) + 0x8000) * 480.f / 0x10000 + 28.343.f;
 
 			lightgun_params[port].offscreen = false;
 			lightgun_params[port].x = mo_x_abs[port];
