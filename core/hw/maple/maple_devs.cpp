@@ -3017,10 +3017,12 @@ u32 jvs_io_board::handle_jvs_message(u8 *buffer_in, u32 length_in, u8 *buffer_ou
 						   //u16 x = mo_x_abs[player_num] * 0xFFFF / 639 + 0.5f;
 						   //u16 y = (479 - mo_y_abs[player_num]) * 0xFFFF / 479 + 0.5f;
 						   // Correct for Ninja Assault. Revisit for other games
-						   u32 xr = 0x19d - 0x37;
-						   u32 yr = 0x1fe - 0x40;
-						   s16 x = mo_x_abs[player_num] * xr / 639 + 0x37;
-						   s16 y = mo_y_abs[player_num] * yr / 479 + 0x40;
+						   //u32 xr = 0x19d - 0x37;
+						   //u32 yr = 0x1fe - 0x40;
+						   //s16 x = mo_x_abs[player_num] * xr / 639 + 0x37;
+						   //s16 y = mo_y_abs[player_num] * yr / 479 + 0x40;
+						   s16 x = mo_x_abs[player_num];
+						   s16 y = mo_y_abs[player_num];
 						   LOGJVS("P%d lightgun %4x,%4x ", player_num + 1, x, y);
 						   JVS_OUT(x >> 8);		// X, MSB
 						   JVS_OUT(x);			// X, LSB
