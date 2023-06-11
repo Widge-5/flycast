@@ -25,6 +25,11 @@ const char* maple_sega_mic_name = "MicDevice for Dreameye";
 const char* maple_sega_purupuru_name = "Puru Puru Pack";
 const char* maple_sega_lightgun_name = "Dreamcast Gun";
 
+extern float gunx_ratio;
+extern float guny_ratio;
+extern int gunx_offset;
+extern int guny_offset;
+
 const char* maple_sega_brand = "Produced By or Under License From SEGA ENTERPRISES,LTD.";
 
 bool enable_naomi_15khz_dipswitch = false;
@@ -2911,8 +2916,8 @@ u32 jvs_io_board::handle_jvs_message(u8 *buffer_in, u32 length_in, u8 *buffer_ou
 							while (axis < buffer_in[cmdi + 1] && first_player * 2 + axis < 8)
 							{
 							   int player_num = first_player + axis / 2;
-							   u16 x = mo_x_abs[player_num] * 0xFFFF / 639 + 0.5f;
-							   u16 y = mo_y_abs[player_num] * 0xFFFF / 479 + 0.5f;
+							   u16 x = (mo_x_abs[player_num] - (gunx_offset / 100 * 640)) * 0x10000 / 640 / gunx_ratio + 0.5f;
+							   u16 y = (mo_y_abs[player_num] - (guny_offset / 100 * 480)) * 0x10000 / 480 / gunx_ratio + 0.5f;
 							   LOGJVS("P%d x,y:%4x,%4x ", player_num + 1, x, y);
 							   JVS_OUT(x >> 8);		// X, MSB
 							   JVS_OUT(x);			// X, LSB
@@ -3006,13 +3011,8 @@ u32 jvs_io_board::handle_jvs_message(u8 *buffer_in, u32 length_in, u8 *buffer_ou
 						}
 						else
 						{
-						   //u16 x = mo_x_abs[player_num] * 0xFFFF / 639 + 0.5f;
-						   //u16 y = (479 - mo_y_abs[player_num]) * 0xFFFF / 479 + 0.5f;
-						   // Correct for Ninja Assault. Revisit for other games
-						   u32 xr = 0x19d - 0x37;
-						   u32 yr = 0x1fe - 0x40;
-						   s16 x = mo_x_abs[player_num] * xr / 639 + 0x37;
-						   s16 y = mo_y_abs[player_num] * yr / 479 + 0x40;
+						   u16 x = (mo_x_abs[player_num] - (gunx_offset / 100 * 640)) * 0x10000 / 640 / gunx_ratio + 0.5f;
+						   u16 y = (480 - (mo_y_abs[player_num] - (guny_offset / 100 * 480))) * 0x10000 / 480 / guny_ratio + 0.5f;
 						   LOGJVS("P%d lightgun %4x,%4x ", player_num + 1, x, y);
 						   JVS_OUT(x >> 8);		// X, MSB
 						   JVS_OUT(x);			// X, LSB

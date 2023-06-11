@@ -16,6 +16,11 @@ GLuint texSamplers[2];
 GLuint depth_fbo;
 GLuint depthSaveTexId;
 
+extern float gunx_ratio;
+extern float guny_ratio;
+extern int gunx_offset;
+extern int guny_offset;
+
 static gl4PipelineShader *gl4GetProgram(bool cp_AlphaTest, bool pp_InsideClipping,
 							bool pp_Texture, bool pp_UseAlpha, bool pp_IgnoreTexA, u32 pp_ShadInstr, bool pp_Offset,
 							u32 pp_FogCtrl, bool pp_TwoVolumes, bool pp_Gouraud, bool pp_BumpMap, bool fog_clamping,
@@ -881,8 +886,8 @@ void gl4DrawGunCrosshair(u8 port)
 	float w=LIGHTGUN_CROSSHAIR_SIZE;
 	float h=LIGHTGUN_CROSSHAIR_SIZE;
 
-	x = lightgun_params[port].x - ( LIGHTGUN_CROSSHAIR_SIZE / 2 );
-	y = lightgun_params[port].y - ( LIGHTGUN_CROSSHAIR_SIZE / 2 );
+	x = gunx_ratio * (lightgun_params[port].x + (gunx_offset / 100 * 640)) - ( LIGHTGUN_CROSSHAIR_SIZE / 2 );
+	y = guny_ratio * (lightgun_params[port].y + (guny_offset / 100 * 480)) - ( LIGHTGUN_CROSSHAIR_SIZE / 2 );
 
 	if (lightgun_params[port].dirty || lightgunTextureId[port] == 0)
 		gl4UpdateLightGunTexture(port);

@@ -111,6 +111,10 @@ static int astick_deadzone = 0;
 static int trigger_deadzone = 0;
 static bool digital_triggers = false;
 static bool allow_service_buttons = false;
+float gunx_ratio = 1.0;
+float guny_ratio = 1.0;
+int gunx_offset = 0;
+int guny_offset = 0;
 
 static bool libretro_supports_bitmasks = false;
 
@@ -498,6 +502,15 @@ static void set_variable_visibility(void)
       snprintf(key, sizeof(key), "%s%u%s", CORE_OPTION_NAME "_lightgun", i + 1, "_crosshair");
       environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY, &option_display);
    }
+
+   option_display.key = CORE_OPTION_NAME "_gunx_ratio";
+   environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY, &option_display);
+   option_display.key = CORE_OPTION_NAME "_guny_ratio";
+   environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY, &option_display);
+   option_display.key = CORE_OPTION_NAME "_gunx_offset";
+   environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY, &option_display);
+   option_display.key = CORE_OPTION_NAME "_guny_offset";
+   environ_cb(RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY, &option_display);
 }
 
 static void update_variables(bool first_startup)
@@ -1071,6 +1084,34 @@ static void update_variables(bool first_startup)
 	  settings.rend.DumpTextures = false;
 
    key[0] = '\0' ;
+
+   var.key = CORE_OPTION_NAME "_gunx_ratio";
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      gunx_ratio = atof(var.value);
+   }
+
+   var.key = CORE_OPTION_NAME "_guny_ratio";
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      guny_ratio = atof(var.value);
+   }
+
+   var.key = CORE_OPTION_NAME "_gunx_offset";
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      gunx_offset = atoi(var.value);
+   }
+
+   var.key = CORE_OPTION_NAME "_guny_offset";
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   {
+      guny_offset = atoi(var.value);
+   }
 
    var.key = key ;
    for ( i = 0 ; i < 4 ; i++)
@@ -2668,8 +2709,8 @@ static void UpdateInputStateNaomi(u32 port)
 		 {
 			int x = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X);
 			int y = input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y);
-			mo_x_abs[port] = (x + 0x8000) * 640.f / 0x10000 - 58.514f;
-			mo_y_abs[port] = (y + 0x8000) * 480.f / 0x10000 + 28.343f;
+			mo_x_abs[port] = gunx_ratio * ((x + 0x8000) * 640.f / 0x10000) + (gunx_offset / 100 * 640);
+			mo_y_abs[port] = guny_ratio * ((y + 0x8000) * 480.f / 0x10000) + (guny_offset / 100 * 480);
 
 			lightgun_params[port].offscreen = false;
 			lightgun_params[port].x = mo_x_abs[port];
@@ -3108,8 +3149,8 @@ void UpdateInputState(u32 port)
 		 }
 		 else
 		 {
-			mo_x_abs[port] = (input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X) + 0x8000) * 640.f / 0x10000 - 58.514f;
-			mo_y_abs[port] = (input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y) + 0x8000) * 480.f / 0x10000 + 28.343f;
+			mo_x_abs[port] = gunx_ratio * ((input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X) + 0x8000) * 640.f / 0x10000) + (gunx_offset / 100 * 640);
+			mo_y_abs[port] = guny_ratio * ((input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y) + 0x8000) * 480.f / 0x10000) + (guny_offset / 100 * 480);
 
 			lightgun_params[port].offscreen = false;
 			lightgun_params[port].x = mo_x_abs[port];
