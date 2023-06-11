@@ -1784,8 +1784,6 @@ protected:
 	virtual u16 read_analog_axis(int player_num, int player_axis, bool inverted) override {
 		if (init_in_progress)
 			return 0;
-		if (mo_x_abs[player_num] < 0 || mo_x_abs[player_num] > 639 || mo_y_abs[player_num] < 0 || mo_y_abs[player_num] > 479)
-			return 0;
 		else
 			return 0x8000;
 	}
@@ -2915,12 +2913,6 @@ u32 jvs_io_board::handle_jvs_message(u8 *buffer_in, u32 length_in, u8 *buffer_ou
 							   int player_num = first_player + axis / 2;
 							   u16 x = mo_x_abs[player_num] * 0xFFFF / 639 + 0.5f;
 							   u16 y = mo_y_abs[player_num] * 0xFFFF / 479 + 0.5f;
-							   if (mo_x_abs[player_num] < 0 || mo_x_abs[player_num] > 639
-									 || mo_y_abs[player_num] < 0 || mo_y_abs[player_num] > 479)
-							   {
-								   x = 0;
-								   y = 0;
-							   }
 							   LOGJVS("P%d x,y:%4x,%4x ", player_num + 1, x, y);
 							   JVS_OUT(x >> 8);		// X, MSB
 							   JVS_OUT(x);			// X, LSB
