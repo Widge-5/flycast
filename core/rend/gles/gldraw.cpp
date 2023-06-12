@@ -65,8 +65,8 @@ extern int screen_width;
 extern int screen_height;
 extern float gunx_ratio;
 extern float guny_ratio;
-extern int gunx_offset;
-extern int guny_offset;
+extern float gunx_offset;
+extern float guny_offset;
 
 PipelineShader* CurrentShader;
 extern u32 gcflip;
@@ -856,8 +856,8 @@ void DrawGunCrosshair(u8 port)
 	float w=LIGHTGUN_CROSSHAIR_SIZE;
 	float h=LIGHTGUN_CROSSHAIR_SIZE;
 
-	x = lightgun_params[port].x - ( LIGHTGUN_CROSSHAIR_SIZE / 2 );
-	y = lightgun_params[port].y - ( LIGHTGUN_CROSSHAIR_SIZE / 2 );
+	x = (lightgun_params[port].x - (gunx_offset / 100.f * 640.f)) / gunx_ratio - ( LIGHTGUN_CROSSHAIR_SIZE / 2 );
+	y = (lightgun_params[port].y - (guny_offset / 100.f * 480.f)) / guny_ratio - ( LIGHTGUN_CROSSHAIR_SIZE / 2 );
 
 	if ( lightgun_params[port].dirty || lightgunTextureId[port] == 0)
 		UpdateLightGunTexture(port);
