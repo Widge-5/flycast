@@ -886,8 +886,8 @@ void gl4DrawGunCrosshair(u8 port)
 	float w=LIGHTGUN_CROSSHAIR_SIZE;
 	float h=LIGHTGUN_CROSSHAIR_SIZE;
 
-	x = gunx_ratio * (lightgun_params[port].x + (gunx_offset / 100 * 640)) - ( LIGHTGUN_CROSSHAIR_SIZE / 2 );
-	y = guny_ratio * (lightgun_params[port].y + (guny_offset / 100 * 480)) - ( LIGHTGUN_CROSSHAIR_SIZE / 2 );
+	x = lightgun_params[port].x - ( LIGHTGUN_CROSSHAIR_SIZE / 2 );
+	y = lightgun_params[port].y - ( LIGHTGUN_CROSSHAIR_SIZE / 2 );
 
 	if (lightgun_params[port].dirty || lightgunTextureId[port] == 0)
 		gl4UpdateLightGunTexture(port);
