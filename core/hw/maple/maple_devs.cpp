@@ -2916,8 +2916,8 @@ u32 jvs_io_board::handle_jvs_message(u8 *buffer_in, u32 length_in, u8 *buffer_ou
 							while (axis < buffer_in[cmdi + 1] && first_player * 2 + axis < 8)
 							{
 							   int player_num = first_player + axis / 2;
-							   u16 x = (mo_x_abs[player_num] - (gunx_offset / 100 * 640)) * 0x10000 / 640 / gunx_ratio + 0.5f;
-							   u16 y = (mo_y_abs[player_num] - (guny_offset / 100 * 480)) * 0x10000 / 480 / gunx_ratio + 0.5f;
+							   u16 x = mo_x_abs[player_num] * 0x10000 / 640 + 0.5f;
+							   u16 y = mo_y_abs[player_num] * 0x10000 / 480 + 0.5f;
 							   LOGJVS("P%d x,y:%4x,%4x ", player_num + 1, x, y);
 							   JVS_OUT(x >> 8);		// X, MSB
 							   JVS_OUT(x);			// X, LSB
@@ -3011,8 +3011,8 @@ u32 jvs_io_board::handle_jvs_message(u8 *buffer_in, u32 length_in, u8 *buffer_ou
 						}
 						else
 						{
-						   u16 x = (mo_x_abs[player_num] - (gunx_offset / 100 * 640)) * 0x10000 / 640 / gunx_ratio + 0.5f;
-						   u16 y = (480 - (mo_y_abs[player_num] - (guny_offset / 100 * 480))) * 0x10000 / 480 / guny_ratio + 0.5f;
+						   u16 x = mo_x_abs[player_num] * 0x10000 / 640 + 0.5f;
+						   u16 y = (480 - mo_y_abs[player_num]) * 0x10000 / 480 + 0.5f;
 						   LOGJVS("P%d lightgun %4x,%4x ", player_num + 1, x, y);
 						   JVS_OUT(x >> 8);		// X, MSB
 						   JVS_OUT(x);			// X, LSB
