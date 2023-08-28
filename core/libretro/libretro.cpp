@@ -2506,9 +2506,11 @@ static void get_analog_stick( retro_input_state_t input_state_cb,
                        s8* p_analog_y )
 {
    int analog_x, analog_y;
-   analog_x = input_state_cb( player_index, RETRO_DEVICE_ANALOG, stick, RETRO_DEVICE_ID_ANALOG_X );
-   analog_y = input_state_cb( player_index, RETRO_DEVICE_ANALOG, stick, RETRO_DEVICE_ID_ANALOG_Y );
-
+   //analog_x = input_state_cb( player_index, RETRO_DEVICE_ANALOG, stick, RETRO_DEVICE_ID_ANALOG_X );
+   //analog_y = input_state_cb( player_index, RETRO_DEVICE_ANALOG, stick, RETRO_DEVICE_ID_ANALOG_Y );
+   analog_x = (gunx_ratio * (input_state_cb( player_index, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X)) + (gunx_offset / 100.f * 640.f));
+   analog_y = (guny_ratio * (input_state_cb( player_index, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y)) + (guny_offset / 100.f * 480.f));
+   
    // Analog stick deadzone (borrowed code from parallel-n64 core)
    if ( astick_deadzone > 0 )
    {
@@ -3045,7 +3047,8 @@ void UpdateInputState(u32 port)
          }
 
 			// LX
-			analog = input_cb( port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X );
+			//analog = input_cb( port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X );
+   			analog = (gunx_ratio * (input_cb( port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_X)) + (gunx_offset / 100.f * 640.f));           
 			if ( analog < -thresh )
 				kcode[port] &= ~( 1 << 6 ); // L
 			else if ( analog > thresh )
@@ -3058,8 +3061,9 @@ void UpdateInputState(u32 port)
 			}
 			
 			// LY
-			analog = input_cb( port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_Y );
-			if ( analog < -thresh )
+			//analog = input_cb( port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_Y );
+            analog = (guny_ratio * (input_cb(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_SCREEN_Y)) + (guny_offset / 100.f * 480.f));
+            if ( analog < -thresh )
 				kcode[port] &= ~( 1 << 4 ); // U
 			else if ( analog > thresh )
 				kcode[port] &= ~( 1 << 5 ); // D	
