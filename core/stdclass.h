@@ -9,7 +9,7 @@
 #ifdef _ANDROID
 #include <sys/mman.h>
 #else
-#define PAGE_SIZE 4096
+#define PAGE_SIZE 16384
 #endif
 
 #undef PAGE_MASK
